@@ -3,8 +3,15 @@ const { v4: uuidv4 } = require('uuid')
 const morgan = require('morgan')
 
 const app = express()
-app.use(morgan('tiny'))
+
+
 app.use(express.json())
+
+morgan.token('info', function (req, res) { 
+    return JSON.stringify(req.body) 
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :info'))
 
 let persons = [
     { 
@@ -60,7 +67,6 @@ app.delete('/api/persons/:id',(req, res) =>{
 app.post('/api/persons',(req, res) => {
     const body = req.body
     const existingPerson = persons.find(p => p.name === body.name)
-    console.log(existingPerson)
 
     if (!body.name || !body.number){
         return res.status(400).json({
