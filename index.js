@@ -1,7 +1,9 @@
 const express = require('express')
 const { v4: uuidv4 } = require('uuid')
+const morgan = require('morgan')
 
 const app = express()
+app.use(morgan('tiny'))
 app.use(express.json())
 
 let persons = [
