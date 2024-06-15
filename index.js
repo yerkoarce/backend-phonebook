@@ -1,8 +1,10 @@
 const express = require('express')
 const { v4: uuidv4 } = require('uuid')
 const morgan = require('morgan')
+const cors = require('cors')
 
 const app = express()
+app.use(cors())
 
 
 app.use(express.json())
@@ -36,7 +38,7 @@ let persons = [
     }
 ]
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res) => { 
     res.json(persons)
 })
 
