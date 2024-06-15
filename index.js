@@ -49,6 +49,10 @@ morgan.token('info', function (req, res) {
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :info'))
 
+app.get('/', (req, res) => {
+    res.send('Hello, world!');
+  });
+
 app.get('/api/persons', (req, res) => { 
     res.json(persons)
 })
