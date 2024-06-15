@@ -6,14 +6,8 @@ const cors = require('cors')
 const app = express()
 app.use(cors())
 
-
 app.use(express.json())
 
-morgan.token('info', function (req, res) { 
-    return JSON.stringify(req.body) 
-})
-
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :info'))
 
 let persons = [
     { 
@@ -37,6 +31,23 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+
+const requestLogger = (req, res, next) => {
+    console.log('Method: ', req.method)
+    console.log('Path: ', req.path)
+    console.log('Body: ', req.body)
+    console.log('---')
+    next()
+}
+
+app.use(requestLogger)
+
+
+morgan.token('info', function (req, res) { 
+    return JSON.stringify(req.body) 
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :info'))
 
 app.get('/api/persons', (req, res) => { 
     res.json(persons)
