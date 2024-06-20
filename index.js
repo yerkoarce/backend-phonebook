@@ -46,17 +46,12 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.get('/info', (req, res)=> {
-    const personsQuantity = persons.length
-    const date = Date()
-    res.send(`<p>Phonebook has info for ${personsQuantity} people.</p><p>${date}</p>`)
+    
 })
 
 
 app.delete('/api/persons/:id',(req, res) =>{
-    const id = req.params.id
-    persons = persons.filter(p => p.id !== id)
-
-    res.status(204).end() 
+    
 })
 
 app.post('/api/persons',(req, res) => {
