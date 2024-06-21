@@ -34,9 +34,14 @@ app.get('/', (req, res) => {
   });
 
 app.get('/api/persons', (req, res) => { 
-    Person.find({}).then(person => {
-        res.json(person)
-    })
+    Person.find({})
+        .then(person => {
+            res.json(person)
+        })
+        .catch(error => {
+            console.error('Error fetching notes', error.message)
+            res.status(500).json({error: 'An error occurred while fetching notes'})
+        })
 })
 
 app.get('/api/persons/:id', (req, res) => {
