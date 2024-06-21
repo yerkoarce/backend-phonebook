@@ -6,7 +6,7 @@ const url = process.env.MONGODB_URI
 
 console.log('Conecting to ', url)
 
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(url)
     .then(result => {
         console.log('connect to MongoDB')
     })
