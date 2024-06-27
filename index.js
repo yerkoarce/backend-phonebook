@@ -45,9 +45,18 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    Person.findById(req.params.id).then(person =>{
-        res.json(person)
-    })
+    Person.findById(req.params.id)
+        .then(person =>{
+            if (person){
+                res.json(person)
+            } else {
+                res.status(404).end()
+            }
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(500).send({ error: "Malformatted id" })
+        })
 })
 
 app.get('/info', (req, res)=> {
