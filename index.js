@@ -7,10 +7,8 @@ const Person = require('./modules/person')
 const app = express()
 app.use(cors())
 
-app.use(express.json())
 app.use(express.static('dist'))
-
-
+app.use(express.json())
 
 const requestLogger = (req, res, next) => {
     console.log('Method: ', req.method)
@@ -28,17 +26,6 @@ morgan.token('info', function (req, res) {
 })
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :info'))
-
-// middleware para el manejo de errores 
-const errorHandler = (error , req, res, next) => {
-    console.log(error.message)
-
-    if (error.name === 'CastError'){
-        return res.status(404).send({ error: 'malformatted id' })
-    }
-
-    next(error)
-}
 
 app.get('/', (req, res) => {
     res.send('Hello, world!');
@@ -71,9 +58,27 @@ app.get('/info', (req, res)=> {
     
 })
 
+app.put('/api/persons/:id', (req,res,next) => {
+    const body = req.body
 
-app.delete('/api/persons/:id',(req, res) =>{
-    
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(req.params.id, person, { new: true })
+        .then(updatePerson => {
+            res.json(updatePerson)
+        })
+        .catch(error => next(error))
+})
+
+app.delete('/api/persons/:id',(req, res, next) =>{
+    Person.findByIdAndDelete(req.params.id)
+        .then(result => {
+            res.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
 app.post('/api/persons',(req, res) => {
@@ -93,6 +98,24 @@ app.post('/api/persons',(req, res) => {
     })
 
 })
+
+// Middleware para solicitudes a rutas inexistentes
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+// middleware para el manejo de errores 
+const errorHandler = (error , req, res, next) => {
+    console.log(error.message)
+
+    if (error.name === 'CastError'){
+        return res.status(404).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
 
 app.use(errorHandler)
 
